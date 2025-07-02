@@ -1,0 +1,37 @@
+.header {
+  background-color: var(--primary-default-color);
+  color: var(--primary-on-primary-color);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem;
+}
+
+.heading {
+  font-weight: bold;
+}
+
+.info,
+.headingBlock,
+.timeInfo,
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info {
+  gap: 1rem;
+}
+
+.timeInfo {
+  min-width: 170px;
+  justify-content: space-between;
+}
+
+.exitButton {
+  &:hover {
+    cursor: pointer;
+  }
+}
