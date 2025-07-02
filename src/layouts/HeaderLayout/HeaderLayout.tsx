@@ -13,10 +13,10 @@ export function HeaderLayout() {
   }, 1000);
 
   return (
-    <div>
+    <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headingBlock}>
-          <MapIcon width="1.25rem" />
+          <MapIcon width="1.5rem" />
           <h1 className={styles.heading}>КАРТА</h1>
         </div>
 
@@ -37,7 +37,9 @@ export function HeaderLayout() {
         </div>
       </header>
 
-      <Outlet />
+      <div className={styles.content}>
+        <Outlet />
+      </div>
     </div>
   );
 }

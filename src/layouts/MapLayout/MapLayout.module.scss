@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+
+  height: 100%;
+}
+
+.sidebarContainer {
+  margin: 0.5rem;
+}
+
+.sidebar {
+  --sidebar-padding: 0.5rem;
+
+  height: 100%;
+
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+
+  min-width: var(--sidebar-min-width);
+}
+
+.sidebarInfo {
+  padding: var(--sidebar-padding);
+  gap: 1rem;
+
+  text-transform: uppercase;
+  font-weight: bold;
+
+  background: var(--primary-default-color);
+  color: var(--primary-on-primary-color);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &>div:first-child {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+.sidebarContent {
+  padding: var(--sidebar-padding)
+}

@@ -1,3 +1,9 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .header {
   background-color: var(--primary-default-color);
   color: var(--primary-on-primary-color);
@@ -34,4 +40,9 @@
   &:hover {
     cursor: pointer;
   }
+}
+
+.content {
+  flex: 1;
+  display: flex;
 }
