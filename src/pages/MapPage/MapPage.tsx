@@ -71,6 +71,7 @@ export function MapPage() {
                 className={styles.fileInput}
                 id="fileInput"
                 type="file"
+                accept=".csv"
               />
               <LoadFileIcon width="1.5rem" />
             </label>
