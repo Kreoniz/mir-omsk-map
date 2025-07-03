@@ -5,9 +5,11 @@ import ExpandIcon from '@/assets/icons/arrow-down.svg?react';
 interface AccordionProps {
   title: string;
   children: React.ReactNode;
+  onOpen?: () => void;
+  onClose?: () => void;
 }
 
-export function Accordion({ title, children }: AccordionProps) {
+export function Accordion({ title, children, onOpen, onClose }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const accordionContent = useRef<HTMLDivElement>(null);
 
@@ -16,9 +18,15 @@ export function Accordion({ title, children }: AccordionProps) {
       if (isOpen) {
         accordionContent.current.style.maxHeight = '0';
         setIsOpen(false);
+        if (onClose) {
+          onClose();
+        }
       } else {
         accordionContent.current.style.maxHeight = accordionContent.current.scrollHeight + 'px';
         setIsOpen(true);
+        if (onOpen) {
+          onOpen();
+        }
       }
     }
   };

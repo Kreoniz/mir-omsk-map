@@ -20,9 +20,10 @@ const activeIcon = L.icon({
 
 interface MapWidgetProps {
   markers: MapMarker[];
+  selectedMarkers: Set<string>;
 }
 
-export function MapWidget({ markers }: MapWidgetProps) {
+export function MapWidget({ markers, selectedMarkers }: MapWidgetProps) {
   const position = { lat: 54.9914, lng: 73.3645 };
 
   return (
@@ -37,16 +38,18 @@ export function MapWidget({ markers }: MapWidgetProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {markers.map((marker, index) => {
+      {markers.map((marker) => {
         const lat = Number(marker.latitude);
         const lng = Number(marker.longitude);
 
-        const array = [defaultIcon, activeIcon];
-        const i = Math.round(Math.random());
-        const icon = array[i];
+        let icon = defaultIcon;
+
+        if (selectedMarkers.has(marker.name)) {
+          icon = activeIcon;
+        }
 
         return (
-          <Marker icon={icon} key={index} position={{ lat, lng }}>
+          <Marker icon={icon} key={marker.name} position={{ lat, lng }}>
             <Popup>
               <strong>{marker.name}</strong>
               <br />

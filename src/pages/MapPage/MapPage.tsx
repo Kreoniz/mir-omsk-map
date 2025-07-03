@@ -12,6 +12,7 @@ import { Accordion } from '@/components';
 export function MapPage() {
   const [markers, setMarkers] = useState<MapMarker[]>([]);
   const [searchedMarkers, setSearchedMarkers] = useState<MapMarker[]>([]);
+  const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(new Set());
 
   const search = (query: string) => {
     const processedQuery = query.trim().toLowerCase();
@@ -68,8 +69,21 @@ export function MapPage() {
             </label>
 
             <div className={styles.accordions}>
-              {searchedMarkers.map((marker, i) => (
-                <Accordion key={i} title={marker.name}>
+              {searchedMarkers.map((marker) => (
+                <Accordion
+                  key={marker.name}
+                  title={marker.name}
+                  onOpen={() => {
+                    const updated = new Set(selectedMarkers);
+                    updated.add(marker.name);
+                    setSelectedMarkers(updated);
+                  }}
+                  onClose={() => {
+                    const updated = new Set(selectedMarkers);
+                    updated.delete(marker.name);
+                    setSelectedMarkers(updated);
+                  }}
+                >
                   <div className={styles.accordionContent}>
                     <div>Широта: {marker.latitude}</div>
                     <div>Долгота: {marker.longitude}</div>
@@ -88,7 +102,7 @@ export function MapPage() {
       </div>
 
       <main className={styles.main}>
-        <MapWidget markers={searchedMarkers} />
+        <MapWidget markers={searchedMarkers} selectedMarkers={selectedMarkers} />
       </main>
     </div>
   );
