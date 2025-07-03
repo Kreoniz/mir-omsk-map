@@ -14,8 +14,7 @@ export function MapPage() {
       const response = await fetch('data/omsk-locations.csv');
       const data = await response.text();
 
-      const parsed = Papa.parse(data, { header: true });
-      console.log(parsed.data);
+      const parsed = Papa.parse(data, { header: true, skipEmptyLines: true });
       setMarkers(parsed.data as MapMarker[]);
     };
 
