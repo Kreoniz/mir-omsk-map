@@ -1,8 +1,7 @@
-// import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 type AnyFunction = (...args: any[]) => any;
 
-/*
 export function useDebounce<T extends AnyFunction>(
   func: T,
   delay: number
@@ -34,17 +33,4 @@ export function useDebounce<T extends AnyFunction>(
     },
     [delay]
   );
-}
-*/
-
-export function useDebounce(callback: AnyFunction, delay: number) {
-  let timeoutId: NodeJS.Timeout;
-
-  return (...args) => {
-    clearTimeout(timeoutId);
-
-    timeoutId = setTimeout(() => {
-      callback.apply(this, args);
-    }, delay);
-  };
 }
