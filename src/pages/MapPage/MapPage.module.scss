@@ -19,6 +19,7 @@
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
 
   min-width: var(--sidebar-min-width);
+  max-width: var(--sidebar-max-width);
 }
 
 .sidebarInfo {
@@ -47,6 +48,11 @@
   padding: var(--sidebar-padding);
   height: calc(100% - var(--sidebar-padding) * 4 - var(--sidebar-info-height));
   overflow-y: scroll;
+
+
+  &>*:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 }
 
 .main {
@@ -60,6 +66,7 @@
 
   border-radius: 8px;
   border: 2px solid var(--primary-default-color);
+
   padding: 0.25rem;
 
   input {

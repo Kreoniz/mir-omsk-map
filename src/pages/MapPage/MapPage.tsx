@@ -7,6 +7,7 @@ import SearchIcon from '@/assets/icons/search.svg?react';
 import Papa from 'papaparse';
 import type { MapMarker } from '@/types';
 import { useDebounce } from '@/hooks';
+import { Accordion } from '@/components';
 
 export function MapPage() {
   const [markers, setMarkers] = useState<MapMarker[]>([]);
@@ -42,6 +43,22 @@ export function MapPage() {
     loadData();
   }, []);
 
+  const accordionItems = [
+    {
+      title: 'What is React?',
+      content: 'React is a JavaScript library for building user interfaces.',
+    },
+    {
+      title: 'Why use SCSS Modules?',
+      content: 'SCSS Modules provide scoped styles and better maintainability.',
+    },
+    {
+      title: 'How does this accordion work?',
+      content:
+        'It uses CSS transitions for animations and React state management for toggle behavior.',
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <div className={styles.sidebarContainer}>
@@ -50,7 +67,6 @@ export function MapPage() {
             <div>
               <MapIcon width="1.5rem" />
               <h2>Объекты</h2>
-              {}
             </div>
 
             <LoadFileIcon width="1.5rem" />
@@ -67,11 +83,18 @@ export function MapPage() {
               <SearchIcon />
             </label>
 
-            {searchedMarkers.map((marker, i) => (
-              <div key={i} className={styles.accordion}>
-                {marker.name}
-              </div>
+            {accordionItems.map((item, i) => (
+              <Accordion key={i} title={item.title}>
+                {item.content}
+              </Accordion>
             ))}
+            <div>
+              {searchedMarkers.map((marker, i) => (
+                <div key={i} className={styles.accordion}>
+                  {marker.name}
+                </div>
+              ))}
+            </div>
           </div>
         </aside>
       </div>

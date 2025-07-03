@@ -1,6 +1,7 @@
 @use "./imports";
 
 button {
+  display: inline-block;
   appearance: none;
   outline: none;
   border: none;
