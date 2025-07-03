@@ -37,7 +37,7 @@
   justify-content: space-between;
   align-items: center;
 
-  &>div:first-child {
+  & > div:first-child {
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -49,8 +49,7 @@
   height: calc(100% - var(--sidebar-padding) * 4 - var(--sidebar-info-height));
   overflow-y: scroll;
 
-
-  &>*:not(:last-child) {
+  & > *:not(:last-child) {
     margin-bottom: 1rem;
   }
 }
@@ -79,7 +78,6 @@
     font-size: 1rem;
 
     &::-webkit-search-decoration,
-
     &::-webkit-search-cancel-button,
     &::-webkit-search-results-button,
     &::-webkit-search-results-decoration {
