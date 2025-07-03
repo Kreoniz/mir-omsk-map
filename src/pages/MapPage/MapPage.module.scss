@@ -9,7 +9,7 @@
 }
 
 .sidebar {
-  --sidebar-padding: 0.5rem;
+  --sidebar-padding: 0.75rem;
   --sidebar-info-height: 1.5rem;
 
   height: 100%;
@@ -51,4 +51,32 @@
 
 .main {
   width: 100%;
+}
+
+.search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-radius: 8px;
+  border: 2px solid var(--primary-default-color);
+  padding: 0.25rem;
+
+  input {
+    appearance: none;
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+
+    font-size: 1rem;
+
+    &::-webkit-search-decoration,
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      display: none;
+    }
+  }
 }
