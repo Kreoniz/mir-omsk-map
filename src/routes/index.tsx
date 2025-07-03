@@ -1,15 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
-import { HeaderLayout, MapLayout } from '@/layouts';
-import { Map } from '@/pages/Map';
+import { HeaderLayout } from '@/layouts';
+import { MapPage } from '@/pages/MapPage';
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HeaderLayout />}>
-          <Route path="/" element={<MapLayout />}>
-            <Route index element={<Map />} />
-          </Route>
+          <Route index element={<MapPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

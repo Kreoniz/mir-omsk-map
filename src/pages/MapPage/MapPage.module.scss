@@ -10,10 +10,11 @@
 
 .sidebar {
   --sidebar-padding: 0.5rem;
+  --sidebar-info-height: 1.5rem;
 
   height: 100%;
-
   overflow: hidden;
+
   border-radius: 15px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
 
@@ -23,6 +24,7 @@
 .sidebarInfo {
   padding: var(--sidebar-padding);
   gap: 1rem;
+  height: var(--sidebar-info-height);
 
   text-transform: uppercase;
   font-weight: bold;
@@ -42,7 +44,9 @@
 }
 
 .sidebarContent {
-  padding: var(--sidebar-padding)
+  padding: var(--sidebar-padding);
+  height: calc(100% - var(--sidebar-padding) * 4 - var(--sidebar-info-height));
+  overflow-y: scroll;
 }
 
 .main {

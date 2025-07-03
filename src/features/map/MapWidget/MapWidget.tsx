@@ -1,8 +1,13 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import styles from './MapWidget.module.scss';
+import type { MapMarker } from '@/types';
 
-export function MapWidget() {
+interface MapWidgetProps {
+  markers: MapMarker[];
+}
+
+export function MapWidget({ markers }: MapWidgetProps) {
   const position = { lat: 54.9914, lng: 73.3645 };
 
   return (
