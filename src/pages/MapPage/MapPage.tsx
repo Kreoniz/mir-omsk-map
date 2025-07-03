@@ -7,9 +7,10 @@ import SearchIcon from '@/assets/icons/search.svg?react';
 import Papa from 'papaparse';
 import type { MapMarker } from '@/types';
 import { useDebounce } from '@/hooks';
-import { Accordion } from '@/components';
+import { Accordion, Skeleton } from '@/components';
 
 export function MapPage() {
+  const [loading, setLoading] = useState(false);
   const [markers, setMarkers] = useState<MapMarker[]>([]);
   const [searchedMarkers, setSearchedMarkers] = useState<MapMarker[]>([]);
   const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(new Set());
@@ -32,8 +33,12 @@ export function MapPage() {
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const file = e.target.files[0];
+    const fileList = e.target.files;
+    if (!fileList || fileList.length === 0) return;
+
+    const file = fileList[0];
+
+    setLoading(true);
     setFile(file);
 
     setSearchTerm('');
@@ -49,9 +54,11 @@ export function MapPage() {
 
         setMarkers(parsedData);
         setSearchedMarkers(parsedData);
+        setLoading(false);
       },
       error: (err) => {
         console.error('CSV parsing error:', err);
+        setLoading(false);
       },
     });
   };
@@ -78,20 +85,23 @@ export function MapPage() {
           </div>
 
           <div className={styles.sidebarContent}>
-            {file && (
-              <label className={styles.search} htmlFor="searchInput">
-                <input
-                  id="searchInput"
-                  type="search"
-                  placeholder="Поиск..."
-                  value={searchTerm}
-                  onChange={handleSearch}
-                />
-                <SearchIcon />
-              </label>
-            )}
+            <label className={styles.search} htmlFor="searchInput">
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Поиск..."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <SearchIcon />
+            </label>
 
             <div className={styles.accordions}>
+              {loading &&
+                Array.from({ length: 15 }).map((_, i) => (
+                  <Skeleton width="100%" height={35} key={i} />
+                ))}
+
               {file ? (
                 searchedMarkers.length > 0 ? (
                   searchedMarkers.map((marker) => (
@@ -122,7 +132,7 @@ export function MapPage() {
                     </Accordion>
                   ))
                 ) : (
-                  <div className={styles.noFile}>Ничего не найдено</div>
+                  <>{!loading && <div className={styles.noFile}>Ничего не найдено</div>}</>
                 )
               ) : (
                 <div className={styles.noFile}>Файл не выбран</div>
