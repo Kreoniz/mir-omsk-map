@@ -60,9 +60,6 @@ export function MapWidget({ markers, selectedMarkers }: MapWidgetProps) {
           </Marker>
         );
       })}
-      <Marker position={position}>
-        <Popup>Это Омск</Popup>
-      </Marker>
     </MapContainer>
   );
 }
