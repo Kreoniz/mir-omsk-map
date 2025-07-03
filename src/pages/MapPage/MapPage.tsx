@@ -43,22 +43,6 @@ export function MapPage() {
     loadData();
   }, []);
 
-  const accordionItems = [
-    {
-      title: 'What is React?',
-      content: 'React is a JavaScript library for building user interfaces.',
-    },
-    {
-      title: 'Why use SCSS Modules?',
-      content: 'SCSS Modules provide scoped styles and better maintainability.',
-    },
-    {
-      title: 'How does this accordion work?',
-      content:
-        'It uses CSS transitions for animations and React state management for toggle behavior.',
-    },
-  ];
-
   return (
     <div className={styles.container}>
       <div className={styles.sidebarContainer}>
@@ -83,16 +67,20 @@ export function MapPage() {
               <SearchIcon />
             </label>
 
-            {accordionItems.map((item, i) => (
-              <Accordion key={i} title={item.title}>
-                {item.content}
-              </Accordion>
-            ))}
-            <div>
+            <div className={styles.accordions}>
               {searchedMarkers.map((marker, i) => (
-                <div key={i} className={styles.accordion}>
-                  {marker.name}
-                </div>
+                <Accordion key={i} title={marker.name}>
+                  <div className={styles.accordionContent}>
+                    <div>Широта: {marker.latitude}</div>
+                    <div>Долгота: {marker.longitude}</div>
+                    <div>
+                      Описание:{' '}
+                      {marker.description || (
+                        <span className={styles.descriptionMissing}>Описания нет</span>
+                      )}
+                    </div>
+                  </div>
+                </Accordion>
               ))}
             </div>
           </div>

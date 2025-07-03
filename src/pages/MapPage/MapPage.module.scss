@@ -87,3 +87,20 @@
     }
   }
 }
+
+.accordions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.accordionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.descriptionMissing {
+  opacity: 0.5;
+}
