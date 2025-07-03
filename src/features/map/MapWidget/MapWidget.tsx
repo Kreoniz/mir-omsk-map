@@ -24,7 +24,7 @@ interface MapWidgetProps {
 }
 
 export function MapWidget({ markers, selectedMarkers }: MapWidgetProps) {
-  const position = { lat: 54.9914, lng: 73.3645 };
+  const position = { lat: 54.9914, lng: 73.3645 }; // Координаты Омска
 
   return (
     <MapContainer
@@ -39,8 +39,8 @@ export function MapWidget({ markers, selectedMarkers }: MapWidgetProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {markers.map((marker) => {
-        const lat = Number(marker.latitude);
-        const lng = Number(marker.longitude);
+        const lat = marker.latitude;
+        const lng = marker.longitude;
 
         let icon = defaultIcon;
 

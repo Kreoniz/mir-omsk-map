@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MapWidget } from '@/features/map';
 import styles from './MapPage.module.scss';
 import MapIcon from '@/assets/icons/map.svg?react';
@@ -13,6 +13,7 @@ export function MapPage() {
   const [markers, setMarkers] = useState<MapMarker[]>([]);
   const [searchedMarkers, setSearchedMarkers] = useState<MapMarker[]>([]);
   const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(new Set());
+  const [file, setFile] = useState<File | null>(null);
 
   const search = (query: string) => {
     const processedQuery = query.trim().toLowerCase();
@@ -31,18 +32,26 @@ export function MapPage() {
     debouncedSearch(e.currentTarget.value);
   };
 
-  useEffect(() => {
-    const loadData = async () => {
-      const response = await fetch('data/omsk-locations.csv');
-      const data = await response.text();
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      setFile(file);
 
-      const parsed = Papa.parse(data, { header: true, skipEmptyLines: true });
-      setMarkers(parsed.data as MapMarker[]);
-      setSearchedMarkers(parsed.data as MapMarker[]);
-    };
-
-    loadData();
-  }, []);
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: true,
+        complete: (results) => {
+          const parsedData = results.data as MapMarker[];
+          setMarkers(parsedData);
+          setSearchedMarkers(parsedData);
+        },
+        error: (err) => {
+          console.error('CSV parsing error:', err);
+        },
+      });
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -54,48 +63,70 @@ export function MapPage() {
               <h2>Объекты</h2>
             </div>
 
-            <LoadFileIcon width="1.5rem" />
+            <label className={styles.fileUpload} htmlFor="fileInput">
+              <input
+                onChange={handleFileUpload}
+                className={styles.fileInput}
+                id="fileInput"
+                type="file"
+              />
+              <LoadFileIcon width="1.5rem" />
+            </label>
           </div>
 
           <div className={styles.sidebarContent}>
-            <label className={styles.search} htmlFor="searchInput">
-              <input
-                id="searchInput"
-                placeholder="Поиск..."
-                onChange={handleSearch}
-                type="search"
-              />
-              <SearchIcon />
-            </label>
+            {file && (
+              <label className={styles.search} htmlFor="searchInput">
+                <input
+                  id="searchInput"
+                  placeholder="Поиск..."
+                  onChange={handleSearch}
+                  type="search"
+                />
+                <SearchIcon />
+              </label>
+            )}
 
             <div className={styles.accordions}>
-              {searchedMarkers.map((marker) => (
-                <Accordion
-                  key={marker.name}
-                  title={marker.name}
-                  onOpen={() => {
-                    const updated = new Set(selectedMarkers);
-                    updated.add(marker.name);
-                    setSelectedMarkers(updated);
-                  }}
-                  onClose={() => {
-                    const updated = new Set(selectedMarkers);
-                    updated.delete(marker.name);
-                    setSelectedMarkers(updated);
-                  }}
-                >
-                  <div className={styles.accordionContent}>
-                    <div>Широта: {marker.latitude}</div>
-                    <div>Долгота: {marker.longitude}</div>
-                    <div>
-                      Описание:{' '}
-                      {marker.description || (
-                        <span className={styles.descriptionMissing}>Описания нет</span>
-                      )}
-                    </div>
-                  </div>
-                </Accordion>
-              ))}
+              {file ? (
+                <>
+                  {searchedMarkers.length > 0 ? (
+                    <>
+                      {searchedMarkers.map((marker) => (
+                        <Accordion
+                          key={marker.name}
+                          title={marker.name}
+                          onOpen={() => {
+                            const updated = new Set(selectedMarkers);
+                            updated.add(marker.name);
+                            setSelectedMarkers(updated);
+                          }}
+                          onClose={() => {
+                            const updated = new Set(selectedMarkers);
+                            updated.delete(marker.name);
+                            setSelectedMarkers(updated);
+                          }}
+                        >
+                          <div className={styles.accordionContent}>
+                            <div>Широта: {marker.latitude}</div>
+                            <div>Долгота: {marker.longitude}</div>
+                            <div>
+                              Описание:{' '}
+                              {marker.description || (
+                                <span className={styles.descriptionMissing}>Описания нет</span>
+                              )}
+                            </div>
+                          </div>
+                        </Accordion>
+                      ))}
+                    </>
+                  ) : (
+                    <div className={styles.noFile}>Ничего не найдено</div>
+                  )}
+                </>
+              ) : (
+                <div className={styles.noFile}>Файл не выбран</div>
+              )}
             </div>
           </div>
         </aside>

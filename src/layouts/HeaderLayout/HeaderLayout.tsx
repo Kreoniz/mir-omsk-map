@@ -17,7 +17,7 @@ export function HeaderLayout() {
       <header className={styles.header}>
         <div className={styles.headingBlock}>
           <MapIcon width="1.5rem" />
-          <h1 className={styles.heading}>КАРТА</h1>
+          <h1 className={styles.heading}>Карта</h1>
         </div>
 
         <div>Название системы</div>
