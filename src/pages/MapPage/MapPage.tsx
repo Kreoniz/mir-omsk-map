@@ -8,6 +8,7 @@ import type { MapMarker } from '@/types';
 import { useDebounce } from '@/hooks';
 import { Skeleton } from '@/components/ui';
 import { MarkerInfoAccordion, MapWidget } from '@/components';
+import { useToast } from '@/hooks';
 
 export function MapPage() {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,8 @@ export function MapPage() {
   const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(new Set());
   const [file, setFile] = useState<File | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const { toast } = useToast();
 
   const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -79,22 +82,59 @@ export function MapPage() {
     setSearchedMarkers([]);
     setSelectedMarkers(new Set());
 
-    Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      dynamicTyping: true,
-      complete: (results) => {
-        const parsedData = results.data as MapMarker[];
+    try {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: true,
+        complete: (results) => {
+          const { data, meta, errors } = results;
 
-        setMarkers(parsedData);
-        setSearchedMarkers(parsedData);
-        setLoading(false);
-      },
-      error: (err) => {
-        console.error('CSV parsing error:', err);
-        setLoading(false);
-      },
-    });
+          if (errors && errors.length > 0) {
+            console.error('CSV parsing errors:', errors);
+            toast('CSV parsing error occurred.', 'error');
+            setLoading(false);
+            return;
+          }
+
+          const requiredFields = ['name', 'longitude', 'latitude'];
+          const missingFields = requiredFields.filter((field) => !meta.fields?.includes(field));
+
+          if (missingFields.length > 0) {
+            toast(`Нужны поля: ${missingFields.join(', ')}`, 'error');
+            setFile(null);
+            setLoading(false);
+            return;
+          }
+
+          const invalidRows = (data as any[]).filter(
+            (row) => !row.name || row.longitude == null || row.latitude == null
+          );
+
+          if (invalidRows.length > 0) {
+            toast('В файле есть строки с пропущенными значениями.', 'error');
+            setFile(null);
+            setLoading(false);
+            return;
+          }
+
+          const parsedData = data as MapMarker[];
+
+          setMarkers(parsedData);
+          setSearchedMarkers(parsedData);
+          setLoading(false);
+        },
+        error: (err) => {
+          console.error('CSV parsing error:', err);
+          toast('Ошибка в обработке файла.', 'error');
+          setFile(null);
+          setLoading(false);
+        },
+      });
+    } catch (e: any) {
+      toast(e.message, 'error');
+      setLoading(false);
+    }
   };
 
   return (
