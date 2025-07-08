@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MapWidget } from '@/features/map';
 import styles from './MapPage.module.scss';
 import LoadFileIcon from '@/assets/icons/load-file.svg?react';
@@ -17,6 +17,30 @@ export function MapPage() {
   const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(new Set());
   const [file, setFile] = useState<File | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const [lastToggled, setLastToggled] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (lastToggled && accordionRefs.current[lastToggled]) {
+      accordionRefs.current[lastToggled].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [lastToggled]);
+
+  const handleOpen = (name: string) => {
+    setSelectedMarkers((prev) => new Set(prev).add(name));
+    setLastToggled(name);
+  };
+
+  const handleClose = (name: string) => {
+    setSelectedMarkers((prev) => {
+      const next = new Set(prev);
+      next.delete(name);
+      return next;
+    });
+    setLastToggled(name);
+  };
 
   const search = (query: string) => {
     const processedQuery = query.trim().toLowerCase();
@@ -106,22 +130,24 @@ export function MapPage() {
 
               {file ? (
                 searchedMarkers.length > 0 ? (
-                  searchedMarkers.map((marker) => (
-                    <MarkerInfoAccordion
-                      key={marker.name}
-                      marker={marker}
-                      onOpen={() => {
-                        const updated = new Set(selectedMarkers);
-                        updated.add(marker.name);
-                        setSelectedMarkers(updated);
-                      }}
-                      onClose={() => {
-                        const updated = new Set(selectedMarkers);
-                        updated.delete(marker.name);
-                        setSelectedMarkers(updated);
-                      }}
-                    />
-                  ))
+                  searchedMarkers.map((marker) => {
+                    const isOpen = selectedMarkers.has(marker.name);
+                    return (
+                      <div
+                        key={marker.name}
+                        ref={(el) => {
+                          if (el) accordionRefs.current[marker.name] = el;
+                        }}
+                      >
+                        <MarkerInfoAccordion
+                          marker={marker}
+                          forceOpen={isOpen}
+                          onOpen={() => handleOpen(marker.name)}
+                          onClose={() => handleClose(marker.name)}
+                        />
+                      </div>
+                    );
+                  })
                 ) : (
                   <>{!loading && <div className={styles.noFile}>Ничего не найдено</div>}</>
                 )
@@ -134,7 +160,14 @@ export function MapPage() {
       </div>
 
       <main className={styles.main}>
-        <MapWidget markers={searchedMarkers} selectedMarkers={selectedMarkers} />
+        <MapWidget
+          markers={searchedMarkers}
+          selectedMarkers={selectedMarkers}
+          onMarkerToggle={(name) =>
+            selectedMarkers.has(name) ? handleClose(name) : handleOpen(name)
+          }
+          lastToggled={lastToggled}
+        />
       </main>
     </div>
   );

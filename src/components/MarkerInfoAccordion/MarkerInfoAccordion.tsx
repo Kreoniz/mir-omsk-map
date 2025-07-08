@@ -6,9 +6,15 @@ interface MarkerInfoAccordionProps {
   marker: MapMarker;
   onOpen?: () => void;
   onClose?: () => void;
+  forceOpen?: boolean;
 }
 
-export function MarkerInfoAccordion({ marker, onOpen, onClose }: MarkerInfoAccordionProps) {
+export function MarkerInfoAccordion({
+  marker,
+  onOpen,
+  onClose,
+  forceOpen,
+}: MarkerInfoAccordionProps) {
   return (
     <Accordion
       className={styles.accordion}
@@ -16,6 +22,7 @@ export function MarkerInfoAccordion({ marker, onOpen, onClose }: MarkerInfoAccor
       title={marker.name}
       onOpen={onOpen}
       onClose={onClose}
+      forceOpen={forceOpen}
     >
       <div className={styles.container}>
         <div className={styles.block}>

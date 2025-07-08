@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './Accordion.module.scss';
 import ExpandIcon from '@/assets/icons/arrow-down.svg?react';
 
@@ -8,22 +8,47 @@ interface AccordionProps {
   children: React.ReactNode;
   onOpen?: () => void;
   onClose?: () => void;
+  forceOpen?: boolean;
 }
 
-export function Accordion({ className, title, children, onOpen, onClose }: AccordionProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const accordionContent = useRef<HTMLDivElement>(null);
+export function Accordion({
+  className,
+  title,
+  children,
+  onOpen,
+  onClose,
+  forceOpen,
+}: AccordionProps) {
+  const [isOpen, setIsOpen] = useState(!!forceOpen);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (typeof forceOpen === 'boolean') {
+      setIsOpen(forceOpen);
+    }
+  }, [forceOpen]);
+
+  useEffect(() => {
+    if (isOpen && headerRef.current) {
+      headerRef.current.focus();
+    }
+
+    if (contentRef.current) {
+      contentRef.current.style.maxHeight = isOpen ? `${contentRef.current.scrollHeight}px` : '0';
+    }
+  }, [isOpen]);
 
   const expand = () => {
-    if (accordionContent.current) {
+    if (contentRef.current) {
       if (isOpen) {
-        accordionContent.current.style.maxHeight = '0';
+        contentRef.current.style.maxHeight = '0';
         setIsOpen(false);
         if (onClose) {
           onClose();
         }
       } else {
-        accordionContent.current.style.maxHeight = accordionContent.current.scrollHeight + 'px';
+        contentRef.current.style.maxHeight = contentRef.current.scrollHeight + 'px';
         setIsOpen(true);
         if (onOpen) {
           onOpen();
@@ -35,6 +60,7 @@ export function Accordion({ className, title, children, onOpen, onClose }: Accor
   return (
     <div className={`${styles.accordion} ${className}`}>
       <button
+        ref={headerRef}
         onClick={expand}
         className={`${styles.header} ${isOpen ? styles.expandedHeader : ''}`}
       >
@@ -42,7 +68,7 @@ export function Accordion({ className, title, children, onOpen, onClose }: Accor
         <ExpandIcon className={`${styles.icon} ${isOpen ? styles.rotated : ''}`} />
       </button>
 
-      <div ref={accordionContent} className={styles.container}>
+      <div ref={contentRef} className={styles.container}>
         <div className={styles.delimiter}></div>
         <div className={styles.content}>{children}</div>
       </div>
