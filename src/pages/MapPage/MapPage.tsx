@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { MapWidget } from '@/features/map';
 import styles from './MapPage.module.scss';
-import MapIcon from '@/assets/icons/map.svg?react';
 import LoadFileIcon from '@/assets/icons/load-file.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
+import MarkerIcon from '@/assets/icons/marker.svg?react';
 import Papa from 'papaparse';
 import type { MapMarker } from '@/types';
 import { useDebounce } from '@/hooks';
-import { Accordion, Skeleton } from '@/components';
+import { Skeleton } from '@/components/ui';
+import { MarkerInfoAccordion } from '@/components';
 
 export function MapPage() {
   const [loading, setLoading] = useState(false);
@@ -69,7 +70,7 @@ export function MapPage() {
         <aside className={styles.sidebar}>
           <div className={styles.sidebarInfo}>
             <div>
-              <MapIcon width="1.5rem" />
+              <MarkerIcon width="1.5rem" />
               <h2>Объекты</h2>
             </div>
             <label className={styles.fileUpload} htmlFor="fileInput">
@@ -105,9 +106,9 @@ export function MapPage() {
               {file ? (
                 searchedMarkers.length > 0 ? (
                   searchedMarkers.map((marker) => (
-                    <Accordion
+                    <MarkerInfoAccordion
                       key={marker.name}
-                      title={marker.name}
+                      marker={marker}
                       onOpen={() => {
                         const updated = new Set(selectedMarkers);
                         updated.add(marker.name);
@@ -118,18 +119,7 @@ export function MapPage() {
                         updated.delete(marker.name);
                         setSelectedMarkers(updated);
                       }}
-                    >
-                      <div className={styles.accordionContent}>
-                        <div>Широта: {marker.latitude}</div>
-                        <div>Долгота: {marker.longitude}</div>
-                        <div>
-                          Описание:{' '}
-                          {marker.description ?? (
-                            <span className={styles.descriptionMissing}>Описания нет</span>
-                          )}
-                        </div>
-                      </div>
-                    </Accordion>
+                    />
                   ))
                 ) : (
                   <>{!loading && <div className={styles.noFile}>Ничего не найдено</div>}</>

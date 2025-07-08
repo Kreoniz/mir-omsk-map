@@ -16,7 +16,7 @@
   overflow: hidden;
 
   border-radius: 15px;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--box-shadow);
 
   min-width: var(--sidebar-min-width);
   max-width: var(--sidebar-max-width);
@@ -37,7 +37,7 @@
   justify-content: space-between;
   align-items: center;
 
-  & > div:first-child {
+  &>div:first-child {
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -49,7 +49,7 @@
   height: calc(100% - var(--sidebar-padding) * 4 - var(--sidebar-info-height));
   overflow-y: scroll;
 
-  & > *:not(:last-child) {
+  &>*:not(:last-child) {
     margin-bottom: 1rem;
   }
 }
@@ -64,9 +64,15 @@
   align-items: center;
 
   border-radius: 8px;
-  border: 2px solid var(--primary-default-color);
+  outline: 1px solid var(--primary-default-color);
 
   padding: 0.25rem;
+
+  box-shadow: var(--box-shadow);
+
+  &:has(input:focus) {
+    outline-width: 2px;
+  }
 
   input {
     appearance: none;
@@ -90,17 +96,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.accordionContent {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  font-weight: bold;
-}
-
-.descriptionMissing {
-  opacity: 0.5;
 }
 
 .fileUpload {

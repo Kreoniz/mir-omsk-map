@@ -1,0 +1,24 @@
+.accordion {
+  box-shadow: var(--box-shadow);
+}
+
+.container {
+  font-size: 1rem;
+
+  &>*:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.heading {
+  font-weight: bold;
+  color: var(--primary-default-color);
+
+  margin-bottom: 0.375rem;
+}
+
+.content {
+  text-indent: 1ch;
+
+  line-height: 1.2;
+}

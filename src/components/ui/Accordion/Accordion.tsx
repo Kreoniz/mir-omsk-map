@@ -3,13 +3,14 @@ import styles from './Accordion.module.scss';
 import ExpandIcon from '@/assets/icons/arrow-down.svg?react';
 
 interface AccordionProps {
+  className?: string;
   title: string;
   children: React.ReactNode;
   onOpen?: () => void;
   onClose?: () => void;
 }
 
-export function Accordion({ title, children, onOpen, onClose }: AccordionProps) {
+export function Accordion({ className, title, children, onOpen, onClose }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const accordionContent = useRef<HTMLDivElement>(null);
 
@@ -32,8 +33,11 @@ export function Accordion({ title, children, onOpen, onClose }: AccordionProps) 
   };
 
   return (
-    <div className={styles.accordion}>
-      <button onClick={expand} className={styles.header}>
+    <div className={`${styles.accordion} ${className}`}>
+      <button
+        onClick={expand}
+        className={`${styles.header} ${isOpen ? styles.expandedHeader : ''}`}
+      >
         {title}
         <ExpandIcon className={`${styles.icon} ${isOpen ? styles.rotated : ''}`} />
       </button>

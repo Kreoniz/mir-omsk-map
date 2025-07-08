@@ -2,7 +2,11 @@
   --padding: 0.5rem;
 
   border-radius: 8px;
-  border: 2px solid var(--primary-default-color);
+  outline: 1px solid var(--primary-default-color);
+
+  &:has(.header:focus) {
+    outline-width: 2px;
+  }
 }
 
 .header {
@@ -16,6 +20,11 @@
   height: 100%;
 
   padding: var(--padding);
+
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+
+  transition: 0.3s ease;
 
   &:hover {
     cursor: pointer;
@@ -35,9 +44,10 @@
 .delimiter {
   position: absolute;
   height: 2px;
-  width: 100%;
+  width: calc(100% - 10px);
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: var(--primary-default-color);
 }
 
@@ -51,4 +61,8 @@
   &.rotated {
     transform: rotate(180deg);
   }
+}
+
+.expandedHeader {
+  background-color: var(--secondary-color);
 }
