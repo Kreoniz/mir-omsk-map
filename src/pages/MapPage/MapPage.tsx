@@ -69,7 +69,7 @@ export function MapPage() {
       <div className={styles.sidebarContainer}>
         <aside className={styles.sidebar}>
           <div className={styles.sidebarInfo}>
-            <div>
+            <div className={styles.sidebarHeading}>
               <MarkerIcon width="1.5rem" />
               <h2>Объекты</h2>
             </div>
@@ -84,8 +84,7 @@ export function MapPage() {
               <LoadFileIcon width="1.5rem" />
             </label>
           </div>
-
-          <div className={styles.sidebarContent}>
+          <div className={styles.searchBlock}>
             <label className={styles.search} htmlFor="searchInput">
               <input
                 id="searchInput"
@@ -96,7 +95,9 @@ export function MapPage() {
               />
               <SearchIcon />
             </label>
+          </div>
 
+          <div className={styles.sidebarContent}>
             <div className={styles.accordions}>
               {loading &&
                 Array.from({ length: 15 }).map((_, i) => (

@@ -11,6 +11,7 @@
 .sidebar {
   --sidebar-padding: 0.75rem;
   --sidebar-info-height: 1.5rem;
+  --search-block-height: 2rem;
 
   height: 100%;
   overflow: hidden;
@@ -36,17 +37,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
 
-  &>div:first-child {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
+.sidebarHeading {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .sidebarContent {
   padding: var(--sidebar-padding);
-  height: calc(100% - var(--sidebar-padding) * 4 - var(--sidebar-info-height));
+  height: calc(100% - var(--sidebar-padding) * 6 - var(--sidebar-info-height) - var(--search-block-height));
   overflow-y: scroll;
 
   &>*:not(:last-child) {
@@ -58,7 +59,26 @@
   width: 100%;
 }
 
+.searchBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--sidebar-padding);
+
+  height: var(--search-block-height);
+
+  position: sticky;
+  top: 0;
+
+  z-index: 10;
+
+  background-color: var(--primary-on-primary-color);
+}
+
 .search {
+  width: 100%;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
