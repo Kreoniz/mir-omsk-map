@@ -108,6 +108,7 @@ export function MapPage() {
               <h2>Объекты</h2>
             </div>
             <label className={styles.fileUpload} htmlFor="fileInput">
+              <div className={styles.tooltipText}>Загрузить .csv файл</div>
               <input
                 onChange={handleFileUpload}
                 className={styles.fileInput}

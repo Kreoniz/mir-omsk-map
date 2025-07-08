@@ -14,7 +14,6 @@
   --search-block-height: 2rem;
 
   height: 100%;
-  overflow: hidden;
 
   border-radius: 15px;
   box-shadow: var(--box-shadow);
@@ -24,12 +23,12 @@
 }
 
 .sidebarInfo {
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+
   padding: var(--sidebar-padding);
   gap: 1rem;
   height: var(--sidebar-info-height);
-
-  text-transform: uppercase;
-  font-weight: bold;
 
   background: var(--primary-default-color);
   color: var(--primary-on-primary-color);
@@ -43,6 +42,8 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .sidebarContent {
@@ -121,8 +122,53 @@
 }
 
 .fileUpload {
+  position: relative;
+  display: inline-block;
+
   &:hover {
     cursor: pointer;
+  }
+
+  &:hover .tooltipText {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.tooltipText {
+  --width: 140px;
+
+  font-size: 1rem;
+  font-weight: none;
+
+  width: var(--width);
+  margin-left: calc(-1 * var(--width) / 2 - 0.5rem);
+
+  padding: 0.125rem 0.5rem;
+  visibility: hidden;
+  background-color: var(--primary-on-primary-color);
+  color: var(--text-color);
+  text-align: center;
+  border-radius: 2px;
+  border: 1px solid var(--text-color);
+
+  position: absolute;
+  z-index: 10000;
+  bottom: 135%;
+  left: 50%;
+
+  opacity: 0;
+  transition: 0.3s ease;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--text-color) transparent transparent transparent;
   }
 }
 
