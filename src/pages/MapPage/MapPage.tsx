@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MapWidget } from '@/features/map';
 import styles from './MapPage.module.scss';
 import LoadFileIcon from '@/assets/icons/load-file.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
@@ -8,7 +7,7 @@ import Papa from 'papaparse';
 import type { MapMarker } from '@/types';
 import { useDebounce } from '@/hooks';
 import { Skeleton } from '@/components/ui';
-import { MarkerInfoAccordion } from '@/components';
+import { MarkerInfoAccordion, MapWidget } from '@/components';
 
 export function MapPage() {
   const [loading, setLoading] = useState(false);
