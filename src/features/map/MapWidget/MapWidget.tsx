@@ -26,9 +26,8 @@ interface RecenterProps {
 function Recenter({ marker }: RecenterProps) {
   const map = useMap();
   useEffect(() => {
-    if (marker) {
-      map.setView([marker.latitude, marker.longitude], map.getZoom());
-    }
+    if (!marker) return;
+    map.panTo([marker.latitude, marker.longitude], { animate: true, duration: 0.5 });
   }, [marker, map]);
   return null;
 }
@@ -50,10 +49,12 @@ export function MapWidget({
 
   const markerRefs = useRef<Record<string, L.Marker>>({});
 
-  const active = markers.find((m) => m.name === lastToggled);
+  const active =
+    lastToggled && selectedMarkers.has(lastToggled)
+      ? markers.find((m) => m.name === lastToggled)
+      : undefined;
 
   useEffect(() => {
-    console.log(selectedMarkers, markers);
     markers.forEach((marker) => {
       const ref = markerRefs.current[marker.name];
       if (ref) {
@@ -103,6 +104,7 @@ export function MapWidget({
             }}
           >
             <Popup
+              autoPan={false}
               autoClose={false}
               closeOnEscapeKey={false}
               closeOnClick={false}

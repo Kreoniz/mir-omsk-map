@@ -31,7 +31,7 @@ export function Accordion({
 
   useEffect(() => {
     if (isOpen && headerRef.current) {
-      headerRef.current.focus();
+      headerRef.current.focus({ preventScroll: true });
     }
 
     if (contentRef.current) {

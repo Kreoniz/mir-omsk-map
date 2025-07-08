@@ -50,8 +50,10 @@
   height: calc(100% - var(--sidebar-padding) * 6 - var(--sidebar-info-height) - var(--search-block-height));
   overflow-y: scroll;
 
+  scroll-behavior: smooth;
+
   &>*:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -113,9 +115,9 @@
 }
 
 .accordions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  &>*:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
 }
 
 .fileUpload {
@@ -132,4 +134,8 @@
 .noFile {
   opacity: 0.5;
   margin: 2rem auto;
+}
+
+.accordionWrapper {
+  scroll-margin-top: calc(var(--sidebar-padding) / 2 - 3px);
 }

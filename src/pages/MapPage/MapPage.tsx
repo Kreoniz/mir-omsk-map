@@ -20,17 +20,28 @@ export function MapPage() {
 
   const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const [lastToggled, setLastToggled] = useState<string | undefined>();
+  const [lastPanTarget, setLastPanTarget] = useState<string>();
+  const [lastScrollTarget, setLastScrollTarget] = useState<string>();
 
   useEffect(() => {
-    if (lastToggled && accordionRefs.current[lastToggled]) {
-      accordionRefs.current[lastToggled].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (lastScrollTarget && accordionRefs.current[lastScrollTarget]) {
+      accordionRefs.current[lastScrollTarget].scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }
-  }, [lastToggled]);
+  }, [lastScrollTarget]);
 
-  const handleOpen = (name: string) => {
+  const handleMapSelect = (name: string) => {
     setSelectedMarkers((prev) => new Set(prev).add(name));
-    setLastToggled(name);
+    setLastPanTarget(name);
+    setLastScrollTarget(name);
+  };
+
+  const handleSidebarOpen = (name: string) => {
+    setSelectedMarkers((prev) => new Set(prev).add(name));
+
+    setLastPanTarget(name);
   };
 
   const handleClose = (name: string) => {
@@ -39,7 +50,6 @@ export function MapPage() {
       next.delete(name);
       return next;
     });
-    setLastToggled(name);
   };
 
   const search = (query: string) => {
@@ -122,39 +132,39 @@ export function MapPage() {
           </div>
 
           <div className={styles.sidebarContent}>
-            <div className={styles.accordions}>
-              {loading &&
-                Array.from({ length: 15 }).map((_, i) => (
-                  <Skeleton width="100%" height={35} key={i} />
-                ))}
+            {loading &&
+              Array.from({ length: 15 }).map((_, i) => (
+                <Skeleton width="100%" height={35} key={i} />
+              ))}
 
-              {file ? (
-                searchedMarkers.length > 0 ? (
-                  searchedMarkers.map((marker) => {
-                    const isOpen = selectedMarkers.has(marker.name);
-                    return (
-                      <div
-                        key={marker.name}
-                        ref={(el) => {
-                          if (el) accordionRefs.current[marker.name] = el;
-                        }}
-                      >
-                        <MarkerInfoAccordion
-                          marker={marker}
-                          forceOpen={isOpen}
-                          onOpen={() => handleOpen(marker.name)}
-                          onClose={() => handleClose(marker.name)}
-                        />
-                      </div>
-                    );
-                  })
-                ) : (
-                  <>{!loading && <div className={styles.noFile}>Ничего не найдено</div>}</>
-                )
+            {file ? (
+              searchedMarkers.length > 0 ? (
+                searchedMarkers.map((marker) => {
+                  const isOpen = selectedMarkers.has(marker.name);
+                  return (
+                    <div
+                      className={styles.accordionWrapper}
+                      key={marker.name}
+                      tabIndex={-1}
+                      ref={(el) => {
+                        if (el) accordionRefs.current[marker.name] = el;
+                      }}
+                    >
+                      <MarkerInfoAccordion
+                        marker={marker}
+                        forceOpen={isOpen}
+                        onOpen={() => handleSidebarOpen(marker.name)}
+                        onClose={() => handleClose(marker.name)}
+                      />
+                    </div>
+                  );
+                })
               ) : (
-                <div className={styles.noFile}>Файл не выбран</div>
-              )}
-            </div>
+                <>{!loading && <div className={styles.noFile}>Ничего не найдено</div>}</>
+              )
+            ) : (
+              <div className={styles.noFile}>Файл не выбран</div>
+            )}
           </div>
         </aside>
       </div>
@@ -164,9 +174,9 @@ export function MapPage() {
           markers={searchedMarkers}
           selectedMarkers={selectedMarkers}
           onMarkerToggle={(name) =>
-            selectedMarkers.has(name) ? handleClose(name) : handleOpen(name)
+            selectedMarkers.has(name) ? handleClose(name) : handleMapSelect(name)
           }
-          lastToggled={lastToggled}
+          lastToggled={lastPanTarget}
         />
       </main>
     </div>
