@@ -120,6 +120,8 @@ export function MapPage() {
 
           const parsedData = data as MapMarker[];
 
+          toast('Файл успешно загружен!', 'success');
+
           setMarkers(parsedData);
           setSearchedMarkers(parsedData);
           setLoading(false);
