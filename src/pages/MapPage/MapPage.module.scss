@@ -48,12 +48,14 @@
 
 .sidebarContent {
   padding: var(--sidebar-padding);
-  height: calc(100% - var(--sidebar-padding) * 6 - var(--sidebar-info-height) - var(--search-block-height));
+  height: calc(
+    100% - var(--sidebar-padding) * 6 - var(--sidebar-info-height) - var(--search-block-height)
+  );
   overflow-y: scroll;
 
   scroll-behavior: smooth;
 
-  &>*:not(:last-child) {
+  & > *:not(:last-child) {
     margin-bottom: 0.5rem;
   }
 }
@@ -116,7 +118,7 @@
 }
 
 .accordions {
-  &>*:not(:last-child) {
+  & > *:not(:last-child) {
     margin-bottom: 0.5rem;
   }
 }
@@ -161,7 +163,7 @@
   transition: 0.3s ease;
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     top: 100%;
     left: 50%;
