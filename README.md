@@ -1,69 +1,94 @@
-# React + TypeScript + Vite
+# Карты
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Приложение для отображения объектов на карте с возможностью поиска и масштабирования.  
 
-Currently, two official plugins are available:
+![Скрин главного экрана](https://github.com/kreoniz/mir-omsk-map/raw/main/images/main-page-screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Оглавление
 
-## Expanding the ESLint configuration
+1. [Краткое описание](#краткое-описание)
+2. [Структура проекта](#структура-проекта)
+3. [Зависимости](#зависимости)
+4. [Установка и запуск](#установка-и-запуск)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Краткое описание
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Используется менеджер пакетов [`pnpm`](https://pnpm.io/), корректные `.csv` файлы находятся в папке `/public/`
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Структура проекта
+
+```
+src/
+│
+├── assets/                 # Статичные файлы
+│   ├── icons/              # HTTP клиент (AxiosInstance)
+│   └── style/              # Конфиг scss
+│       ├── _imports.scss   # Импорты других scss файлов
+│       ├── _reset.scss     # Обнуление браузерных стилей
+│       ├── _variables.scss # Переменные (цвета, тени)
+│       └── index.scss      # Глобальные стили-
+│
+├── components/             # UI компоненты
+│   ├── ...
+│   ├── MapWidget/          # Пример компонента
+│   ├── ui/                 # Атомарные UI компонент
+│   └── index.ts            # Экспорты
+│
+├── hooks/                  # Кастомные хуки
+│   ├── ...
+│   └── index.ts
+│
+├── layouts/                # Лэйауты
+│   └── ...
+│
+├── pages/                  # Страницы приложения
+│   └── ...
+│
+├── routes/                 # Маршрутизация
+│   └── index.tsx           # Конфигурация роутера
+│
+├── types/                  # Типы TypeScript
+│   ├── ...
+│   └── index.ts            # Экспорт типов
+│
+├── index.css               # Глобальные стили (+ Tailwind/shadcn)
+└── main.tsx                # Точка входа
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Зависимости
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- [React 19](https://react.dev)
+- [React Router](https://reactrouter.com/start/declarative/installation)
+- [TypeScript](https://www.typescriptlang.org) - суперсет JavaScript (компилятор), предоставляющий статическую типизацию. С ним работать и быстрее, и приятнее.
+- [Vite](https://vitejs.dev) - Наилучший инструмент для настройки среды разработки, удобно начинать проект, намного быстрее чем webpack.
+]
+- [ESLint](https://eslint.org/) - Помогает ловить ошибки в коде на этапах компиляции/написания кода.
+- [Prettier](https://prettier.io/) - Помогает соблюдать consistency в написании кода.
+- [React Leaflet](https://react-leaflet.js.org/) - Интерактивные карты, обертка Leaflet для React.
+- [dayjs](https://day.js.org/) - JavaScript библиотека для операций с датами и временем.
+- [React Hot Toast](https://react-hot-toast.com/) - Кастомные оповещения-тостеры для React
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Установка и запуск
+
+1. **Клонировать репозиторий**
+   ```bash
+   git clone git@github.com:Kreoniz/mir-omsk-map.git
+   cd mir-omsk-map
+   ```
+
+2. **Установить зависимости**
+   ```bash
+   pnpm install
+   ```
+
+3. **Запустить в режиме разработки**
+   ```bash
+   pnpm dev
+   ```
+
+4. **Доступные npm-скрипты**
+   - Запуск в режиме разработки: `pnpm dev`
+   - Сборка для production и предосмотр: `pnpm build` и `pnpm preview`
+   - Линтинг кода: `pnpm lint`
+   - Форматирование кода: `pnpm format`
