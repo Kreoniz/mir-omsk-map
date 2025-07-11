@@ -1,33 +1,54 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import styles from './MapPage.module.scss';
 import LoadFileIcon from '@/assets/icons/load-file.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import MarkerIcon from '@/assets/icons/marker.svg?react';
 import Papa from 'papaparse';
 import type { MapMarker } from '@/types';
-import { useDebounce } from '@/hooks';
 import { Skeleton } from '@/components/ui';
 import { MarkerInfoAccordion, MapWidget } from '@/components';
 import { useToast } from '@/hooks';
 
+const loadFromLocalStorage = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (error) {
+    console.error('Ошибка при загрузке из localStorage', error);
+    return defaultValue;
+  }
+};
+
+const saveToLocalStorage = <T,>(key: string, value: T) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error('Ошибка при сохранении в localStorage', error);
+  }
+};
+
 export function MapPage() {
   const [loading, setLoading] = useState(false);
-  const [markers, setMarkers] = useState<MapMarker[]>([]);
-  const [searchedMarkers, setSearchedMarkers] = useState<MapMarker[]>([]);
-  const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(new Set());
-  const [file, setFile] = useState<File | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [markers, setMarkers] = useState<MapMarker[]>(() =>
+    loadFromLocalStorage<MapMarker[]>('markers', [])
+  );
+  const [searchTerm, setSearchTerm] = useState(() =>
+    loadFromLocalStorage<string>('searchTerm', '')
+  );
+  const [selectedMarkers, setSelectedMarkers] = useState<Set<string>>(
+    () => new Set(loadFromLocalStorage<string[]>('selectedMarkers', []))
+  );
 
   const { toast } = useToast();
 
   const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const [lastPanTarget, setLastPanTarget] = useState<string>();
-  const [lastScrollTarget, setLastScrollTarget] = useState<string>();
+  const [lastPanTarget, setLastPanTarget] = useState<string | undefined>();
+  const [lastScrollTarget, setLastScrollTarget] = useState<string | undefined>();
 
   useEffect(() => {
     if (lastScrollTarget && accordionRefs.current[lastScrollTarget]) {
-      accordionRefs.current[lastScrollTarget].scrollIntoView({
+      accordionRefs.current[lastScrollTarget]?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       });
@@ -42,7 +63,6 @@ export function MapPage() {
 
   const handleSidebarOpen = (name: string) => {
     setSelectedMarkers((prev) => new Set(prev).add(name));
-
     setLastPanTarget(name);
   };
 
@@ -54,19 +74,22 @@ export function MapPage() {
     });
   };
 
-  const search = (query: string) => {
-    const processedQuery = query.trim().toLowerCase();
-    setSearchedMarkers(
-      markers.filter((marker) => marker.name.trim().toLowerCase().includes(processedQuery))
-    );
-  };
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
-  const debouncedSearch = useDebounce(search, 300);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  const searchedMarkers = useMemo(() => {
+    const processedQuery = debouncedSearchTerm.trim().toLowerCase();
+    return markers.filter((marker) => marker.name.trim().toLowerCase().includes(processedQuery));
+  }, [markers, debouncedSearchTerm]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.currentTarget.value;
-    setSearchTerm(query);
-    debouncedSearch(query);
+    setSearchTerm(e.currentTarget.value);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,10 +99,7 @@ export function MapPage() {
     const file = fileList[0];
 
     setLoading(true);
-    setFile(file);
-
     setSearchTerm('');
-    setSearchedMarkers([]);
     setSelectedMarkers(new Set());
 
     try {
@@ -91,8 +111,8 @@ export function MapPage() {
           const { data, meta, errors } = results;
 
           if (errors && errors.length > 0) {
-            console.error('CSV parsing errors:', errors);
-            toast('CSV parsing error occurred.', 'error');
+            console.error('Ошибки при разборе CSV:', errors);
+            toast('Произошла ошибка при разборе CSV.', 'error');
             setLoading(false);
             return;
           }
@@ -102,18 +122,16 @@ export function MapPage() {
 
           if (missingFields.length > 0) {
             toast(`Нужны поля: ${missingFields.join(', ')}`, 'error');
-            setFile(null);
             setLoading(false);
             return;
           }
 
-          const invalidRows = (data as any[]).filter(
+          const invalidRows = (data as MapMarker[]).filter(
             (row) => !row.name || row.longitude == null || row.latitude == null
           );
 
           if (invalidRows.length > 0) {
             toast('В файле есть строки с пропущенными значениями.', 'error');
-            setFile(null);
             setLoading(false);
             return;
           }
@@ -121,23 +139,33 @@ export function MapPage() {
           const parsedData = data as MapMarker[];
 
           toast('Файл успешно загружен!', 'success');
-
           setMarkers(parsedData);
-          setSearchedMarkers(parsedData);
           setLoading(false);
         },
         error: (err) => {
-          console.error('CSV parsing error:', err);
+          console.error('Ошибка при разборе CSV:', err);
           toast('Ошибка в обработке файла.', 'error');
-          setFile(null);
           setLoading(false);
         },
       });
-    } catch (e: any) {
-      toast(e.message, 'error');
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast(error.message, 'error');
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    saveToLocalStorage('markers', markers);
+  }, [markers]);
+
+  useEffect(() => {
+    saveToLocalStorage('searchTerm', searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    saveToLocalStorage('selectedMarkers', Array.from(selectedMarkers));
+  }, [selectedMarkers]);
 
   return (
     <div className={styles.container}>
@@ -174,12 +202,11 @@ export function MapPage() {
           </div>
 
           <div className={styles.sidebarContent}>
-            {loading &&
+            {loading ? (
               Array.from({ length: 15 }).map((_, i) => (
                 <Skeleton width="100%" height={35} key={i} />
-              ))}
-
-            {file ? (
+              ))
+            ) : markers.length > 0 ? (
               searchedMarkers.length > 0 ? (
                 searchedMarkers.map((marker) => {
                   const isOpen = selectedMarkers.has(marker.name);
@@ -202,7 +229,7 @@ export function MapPage() {
                   );
                 })
               ) : (
-                <>{!loading && <div className={styles.noFile}>Ничего не найдено</div>}</>
+                <div className={styles.noFile}>Ничего не найдено</div>
               )
             ) : (
               <div className={styles.noFile}>Файл не выбран</div>
