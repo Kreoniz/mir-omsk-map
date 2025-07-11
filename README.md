@@ -61,7 +61,6 @@ src/
 - [React Router](https://reactrouter.com/start/declarative/installation)
 - [TypeScript](https://www.typescriptlang.org) - суперсет JavaScript (компилятор), предоставляющий статическую типизацию. С ним работать и быстрее, и приятнее.
 - [Vite](https://vitejs.dev) - Наилучший инструмент для настройки среды разработки, удобно начинать проект, намного быстрее чем webpack.
-]
 - [ESLint](https://eslint.org/) - Помогает ловить ошибки в коде на этапах компиляции/написания кода.
 - [Prettier](https://prettier.io/) - Помогает соблюдать consistency в написании кода.
 - [React Leaflet](https://react-leaflet.js.org/) - Интерактивные карты, обертка Leaflet для React.
