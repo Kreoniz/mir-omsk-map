@@ -42,9 +42,37 @@ export function MapPage() {
   const { toast } = useToast();
 
   const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const markersRef = useRef(markers);
+  const searchTermRef = useRef(searchTerm);
+  const selectedMarkersRef = useRef(selectedMarkers);
 
   const [lastPanTarget, setLastPanTarget] = useState<string | undefined>();
   const [lastScrollTarget, setLastScrollTarget] = useState<string | undefined>();
+
+  useEffect(() => {
+    markersRef.current = markers;
+  }, [markers]);
+
+  useEffect(() => {
+    searchTermRef.current = searchTerm;
+  }, [searchTerm]);
+
+  useEffect(() => {
+    selectedMarkersRef.current = selectedMarkers;
+  }, [selectedMarkers]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      saveToLocalStorage('markers', markersRef.current);
+      saveToLocalStorage('searchTerm', searchTermRef.current);
+      saveToLocalStorage('selectedMarkers', Array.from(selectedMarkersRef.current));
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   useEffect(() => {
     if (lastScrollTarget && accordionRefs.current[lastScrollTarget]) {
@@ -154,18 +182,6 @@ export function MapPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    saveToLocalStorage('markers', markers);
-  }, [markers]);
-
-  useEffect(() => {
-    saveToLocalStorage('searchTerm', searchTerm);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    saveToLocalStorage('selectedMarkers', Array.from(selectedMarkers));
-  }, [selectedMarkers]);
 
   return (
     <div className={styles.container}>
