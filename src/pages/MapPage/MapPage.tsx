@@ -49,6 +49,8 @@ export function MapPage() {
   const [lastPanTarget, setLastPanTarget] = useState<string | undefined>();
   const [lastScrollTarget, setLastScrollTarget] = useState<string | undefined>();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     markersRef.current = markers;
   }, [markers]);
@@ -181,6 +183,10 @@ export function MapPage() {
       toast(error.message, 'error');
       setLoading(false);
     }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -195,6 +201,7 @@ export function MapPage() {
             <label className={styles.fileUpload} htmlFor="fileInput">
               <div className={styles.tooltipText}>Загрузить .csv файл</div>
               <input
+                ref={fileInputRef}
                 onChange={handleFileUpload}
                 className={styles.fileInput}
                 id="fileInput"
