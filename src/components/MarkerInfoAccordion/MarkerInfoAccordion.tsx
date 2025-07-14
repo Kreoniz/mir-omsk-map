@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Accordion } from '@/components/ui';
 import styles from './MarkerInfoAccordion.module.scss';
 import type { MapMarker } from '@/types';
@@ -9,7 +10,7 @@ interface MarkerInfoAccordionProps {
   forceOpen?: boolean;
 }
 
-export function MarkerInfoAccordion({
+function MarkerInfoAccordionContent({
   marker,
   onOpen,
   onClose,
@@ -42,3 +43,8 @@ export function MarkerInfoAccordion({
     </Accordion>
   );
 }
+
+export const MarkerInfoAccordion = memo(
+  MarkerInfoAccordionContent,
+  (prevProps, nextProps) => prevProps.forceOpen === nextProps.forceOpen
+);
