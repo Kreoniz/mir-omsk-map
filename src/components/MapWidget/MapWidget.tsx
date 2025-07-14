@@ -72,7 +72,6 @@ export function MapWidget({
       className={styles.mapContainer}
       center={position}
       zoom={12}
-      scrollWheelZoom={false}
       attributionControl={false}
     >
       <TileLayer
