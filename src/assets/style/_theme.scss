@@ -9,9 +9,12 @@
   --text-color: #e8e8ee;
   --secondary-text-color: #ffffff;
 
-  --box-shadow: none;
+  --skeleton-gradient-1: #3a3a3a;
+  --skeleton-gradient-2: #2a2a2a;
 
   --bar-color: none;
+
+  --box-shadow: none;
 
   .leaflet-layer,
   .leaflet-control-zoom-in,
@@ -21,7 +24,7 @@
   }
 
   .leaflet-container {
-    background: var(--background-color)
+    background: var(--background-color);
   }
 
   .leaflet-popup-tip,
