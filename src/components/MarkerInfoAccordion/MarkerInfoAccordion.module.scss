@@ -5,14 +5,14 @@
 .container {
   font-size: 1rem;
 
-  & > *:not(:last-child) {
+  &>*:not(:last-child) {
     margin-bottom: 0.5rem;
   }
 }
 
 .heading {
   font-weight: bold;
-  color: var(--primary-default-color);
+  color: var(--primary-color);
 
   margin-bottom: 0.375rem;
 }

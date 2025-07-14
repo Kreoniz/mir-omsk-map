@@ -2,11 +2,13 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+
+  background-color: var(--background-color);
 }
 
 .header {
-  background-color: var(--primary-default-color);
-  color: var(--primary-on-primary-color);
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
 
   display: flex;
   justify-content: space-between;
@@ -39,6 +41,8 @@
 }
 
 .exitButton {
+  color: var(--on-primary-color);
+
   &:hover {
     cursor: pointer;
   }

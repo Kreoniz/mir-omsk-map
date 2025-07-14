@@ -3,7 +3,7 @@ import styles from './HeaderLayout.module.scss';
 import MapIcon from '@/assets/icons/map.svg?react';
 import ClockIcon from '@/assets/icons/clock.svg?react';
 import ExitIcon from '@/assets/icons/exit.svg?react';
-import { Clock } from '@/components/ui';
+import { Clock, ThemeToggle } from '@/components/ui';
 
 export function HeaderLayout() {
   return (
@@ -17,6 +17,8 @@ export function HeaderLayout() {
         <div>Название системы</div>
 
         <div className={styles.info}>
+          <ThemeToggle />
+
           <div className={styles.timeInfo}>
             <ClockIcon width="1.25rem" />
             <Clock />

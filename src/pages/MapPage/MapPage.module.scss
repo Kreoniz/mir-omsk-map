@@ -30,8 +30,8 @@
   gap: 1rem;
   height: var(--sidebar-info-height);
 
-  background: var(--primary-default-color);
-  color: var(--primary-on-primary-color);
+  background: var(--primary-color);
+  color: var(--on-primary-color);
 
   display: flex;
   justify-content: space-between;
@@ -48,14 +48,14 @@
 
 .sidebarContent {
   padding: var(--sidebar-padding);
-  height: calc(
-    100% - var(--sidebar-padding) * 6 - var(--sidebar-info-height) - var(--search-block-height)
-  );
+  height: calc(100% - var(--sidebar-padding) * 6 - var(--sidebar-info-height) - var(--search-block-height));
   overflow-y: scroll;
+
+  scrollbar-color: var(--text-color) var(--background-color);
 
   scroll-behavior: smooth;
 
-  & > *:not(:last-child) {
+  &>*:not(:last-child) {
     margin-bottom: 0.5rem;
   }
 }
@@ -78,7 +78,17 @@
 
   z-index: 10;
 
-  background-color: var(--primary-on-primary-color);
+  background-color: var(--background-color);
+
+  input {
+    background-color: inherit;
+    color: inherit;
+
+    &::placeholder {
+      color: inherit;
+      opacity: 0.5;
+    }
+  }
 }
 
 .search {
@@ -89,7 +99,7 @@
   align-items: center;
 
   border-radius: 8px;
-  outline: 1px solid var(--primary-default-color);
+  outline: 1px solid var(--primary-color);
 
   padding: 0.25rem;
 
@@ -118,7 +128,7 @@
 }
 
 .accordions {
-  & > *:not(:last-child) {
+  &>*:not(:last-child) {
     margin-bottom: 0.5rem;
   }
 }
@@ -148,7 +158,7 @@
 
   padding: 0.125rem 0.5rem;
   visibility: hidden;
-  background-color: var(--primary-on-primary-color);
+  background-color: var(--background-color);
   color: var(--text-color);
   text-align: center;
   border-radius: 2px;

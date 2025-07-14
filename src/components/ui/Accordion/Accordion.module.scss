@@ -2,7 +2,7 @@
   --padding: 0.5rem;
 
   border-radius: 8px;
-  outline: 1px solid var(--primary-default-color);
+  outline: 1px solid var(--primary-color);
 
   &:has(.header:focus) {
     outline-width: 2px;
@@ -26,6 +26,8 @@
 
   transition: 0.3s ease;
 
+  color: var(--text-color);
+
   &:hover {
     cursor: pointer;
   }
@@ -48,7 +50,7 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--primary-default-color);
+  background-color: var(--primary-color);
 }
 
 .content {
