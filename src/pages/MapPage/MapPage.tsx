@@ -175,8 +175,12 @@ export function MapPage() {
 
           const parsedData = data as MapMarker[];
 
-          toast('Файл успешно загружен!', 'success');
-          setMarkers(parsedData);
+          if (parsedData.length > 0) {
+            toast('Файл успешно загружен!', 'success');
+            setMarkers(parsedData);
+          } else {
+            toast('В файле нет данных', 'error');
+          }
           setLoading(false);
         },
         error: (err) => {
