@@ -8,6 +8,7 @@ import type { MapMarker } from '@/types';
 import { Skeleton } from '@/components/ui';
 import { MarkerInfoAccordion, MapWidget } from '@/components';
 import { useToast } from '@/hooks';
+import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 
 const loadFromLocalStorage = <T,>(key: string, defaultValue: T): T => {
   try {
@@ -41,13 +42,13 @@ export function MapPage() {
 
   const { toast } = useToast();
 
-  const accordionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const markersRef = useRef(markers);
   const searchTermRef = useRef(searchTerm);
   const selectedMarkersRef = useRef(selectedMarkers);
 
   const [lastPanTarget, setLastPanTarget] = useState<string | undefined>();
-  const [lastScrollTarget, setLastScrollTarget] = useState<string | undefined>();
+
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,23 +73,27 @@ export function MapPage() {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
+      handleBeforeUnload();
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
-  useEffect(() => {
-    if (lastScrollTarget && accordionRefs.current[lastScrollTarget]) {
-      accordionRefs.current[lastScrollTarget]?.scrollIntoView({
+  const handleMapSelect = (name: string) => {
+    setSelectedMarkers((prev) => {
+      const next = new Set(prev);
+      next.add(name);
+      return next;
+    });
+    setLastPanTarget(name);
+
+    const index = searchedMarkers.findIndex((m) => m.name === name);
+    if (index !== -1 && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index,
+        align: 'start',
         behavior: 'smooth',
-        block: 'start',
       });
     }
-  }, [lastScrollTarget]);
-
-  const handleMapSelect = (name: string) => {
-    setSelectedMarkers((prev) => new Set(prev).add(name));
-    setLastPanTarget(name);
-    setLastScrollTarget(name);
   };
 
   const handleSidebarOpen = (name: string) => {
@@ -131,6 +136,8 @@ export function MapPage() {
     setLoading(true);
     setSearchTerm('');
     setSelectedMarkers(new Set());
+    setMarkers([]);
+    setLastPanTarget(undefined);
 
     try {
       Papa.parse(file, {
@@ -226,31 +233,29 @@ export function MapPage() {
 
           <div className={styles.sidebarContent}>
             {loading ? (
-              Array.from({ length: 15 }).map((_, i) => (
-                <Skeleton width="100%" height={35} key={i} />
-              ))
+              <div className={styles.loadingList}>
+                {Array.from({ length: 15 }).map((_, i) => (
+                  <Skeleton width="100%" height={35} key={i} />
+                ))}
+              </div>
             ) : markers.length > 0 ? (
               searchedMarkers.length > 0 ? (
-                searchedMarkers.map((marker) => {
-                  const isOpen = selectedMarkers.has(marker.name);
-                  return (
-                    <div
-                      className={styles.accordionWrapper}
-                      key={marker.name}
-                      tabIndex={-1}
-                      ref={(el) => {
-                        if (el) accordionRefs.current[marker.name] = el;
-                      }}
-                    >
+                <Virtuoso
+                  className={styles.virtualizedList}
+                  ref={virtuosoRef}
+                  overscan={25}
+                  data={searchedMarkers}
+                  itemContent={(_, marker) => (
+                    <div className={styles.virtualizedItem}>
                       <MarkerInfoAccordion
                         marker={marker}
-                        forceOpen={isOpen}
+                        forceOpen={selectedMarkers.has(marker.name)}
                         onOpen={() => handleSidebarOpen(marker.name)}
                         onClose={() => handleClose(marker.name)}
                       />
                     </div>
-                  );
-                })
+                  )}
+                />
               ) : (
                 <div className={styles.noFile}>Ничего не найдено</div>
               )
