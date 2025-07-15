@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import styles from './MapPage.module.scss';
 import LoadFileIcon from '@/assets/icons/load-file.svg?react';
-import SearchIcon from '@/assets/icons/search.svg?react';
 import MarkerIcon from '@/assets/icons/marker.svg?react';
 import Papa from 'papaparse';
 import type { MapMarker } from '@/types';
-import { Skeleton } from '@/components/ui';
+import { Skeleton, SearchBar } from '@/components/ui';
 import { MarkerInfoAccordion, MapWidget } from '@/components';
 import { useToast } from '@/hooks';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
@@ -109,23 +108,10 @@ export function MapPage() {
     });
   };
 
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
-
   const searchedMarkers = useMemo(() => {
-    const processedQuery = debouncedSearchTerm.trim().toLowerCase();
+    const processedQuery = searchTerm.trim().toLowerCase();
     return markers.filter((marker) => marker.name.trim().toLowerCase().includes(processedQuery));
-  }, [markers, debouncedSearchTerm]);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.currentTarget.value);
-  };
+  }, [markers, searchTerm]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -223,16 +209,7 @@ export function MapPage() {
             </label>
           </div>
           <div className={styles.searchBlock}>
-            <label className={styles.search} htmlFor="searchInput">
-              <input
-                id="searchInput"
-                type="search"
-                placeholder="Поиск..."
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-              <SearchIcon />
-            </label>
+            <SearchBar value={searchTerm} onChange={setSearchTerm} />
           </div>
 
           <div className={styles.sidebarContent}>
