@@ -52,3 +52,7 @@
   flex: 1;
   max-height: calc(100% - var(--header-height));
 }
+
+.appName {
+  font-weight: bold;
+}

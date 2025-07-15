@@ -14,7 +14,7 @@ export function HeaderLayout() {
           <h1 className={styles.heading}>Карта</h1>
         </div>
 
-        <div>Название системы</div>
+        <div className={styles.appName}>Маркер</div>
 
         <div className={styles.info}>
           <ThemeToggle />
