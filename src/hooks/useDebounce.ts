@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 
-type AnyFunction = (...args: any[]) => any;
+type AnyFunction = (...args: readonly unknown[]) => unknown;
 
 export function useDebounce<T extends AnyFunction>(
   func: T,
