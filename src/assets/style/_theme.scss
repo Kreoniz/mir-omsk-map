@@ -32,4 +32,26 @@
     background: var(--background-color);
     color: var(--text-color);
   }
+
+  // toast theming
+
+  --toast-bg-success: #14532d;
+  --toast-text-success: #bbf7d0;
+  --toast-border-success: #16a34a;
+  --toast-icon-success: #22c55e;
+
+  --toast-bg-error: #7f1d1d;
+  --toast-text-error: #fecaca;
+  --toast-border-error: #dc2626;
+  --toast-icon-error: #ef4444;
+
+  --toast-bg-warning: #713f12;
+  --toast-text-warning: #fef08a;
+  --toast-border-warning: #ca8a04;
+  --toast-icon-warning: #eab308;
+
+  --toast-bg-info: #1e3a8a;
+  --toast-text-info: #bfdbfe;
+  --toast-border-info: #2563eb;
+  --toast-icon-info: #3b82f6;
 }

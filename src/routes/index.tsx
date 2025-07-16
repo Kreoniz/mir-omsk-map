@@ -15,10 +15,9 @@ export function AppRouter() {
       <Toaster
         position="bottom-right"
         gutter={4}
-        reverseOrder={true}
+        reverseOrder={false}
         toastOptions={{
           duration: 3000,
-          removeDelay: 0,
         }}
       />
     </BrowserRouter>

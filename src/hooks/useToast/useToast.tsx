@@ -33,8 +33,10 @@ export function useToast() {
     const { icon, className } = toastConfig[type];
 
     toast.custom(
-      () => (
-        <div className={`${styles.toast} ${className}`}>
+      (t) => (
+        <div
+          className={`${styles.toast} ${className} ${t.visible ? styles.animateEnter : styles.animateLeave}`}
+        >
           {icon}
           <span>{message}</span>
         </div>

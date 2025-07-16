@@ -19,4 +19,26 @@
   --bar-color: #0155ab;
 
   --box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+
+  // toast theming
+
+  --toast-bg-success: #f0fdf4;
+  --toast-text-success: #166534;
+  --toast-border-success: #bbf7d0;
+  --toast-icon-success: #16a34a;
+
+  --toast-bg-error: #fef2f2;
+  --toast-text-error: #b91c1c;
+  --toast-border-error: #fecaca;
+  --toast-icon-error: #dc2626;
+
+  --toast-bg-warning: #fefce8;
+  --toast-text-warning: #854d0e;
+  --toast-border-warning: #fef08a;
+  --toast-icon-warning: #ca8a04;
+
+  --toast-bg-info: #eff6ff;
+  --toast-text-info: #1e40af;
+  --toast-border-info: #bfdbfe;
+  --toast-icon-info: #2563eb;
 }
